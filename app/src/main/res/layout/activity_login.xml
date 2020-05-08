@@ -36,6 +36,7 @@
             android:id="@+id/password"
             android:layout_marginTop="16dp"
             android:hint="@string/password_hint"
+            android:autofillHints="password"
             android:layout_width="match_parent"
             android:inputType="textPassword"
             android:maxLines="1"
@@ -60,7 +61,7 @@
             android:layout_height="wrap_content"/>
 
          <Button
-            android:id="@+id/create_acct_button"
+            android:id="@+id/create_acct_button_login"
             android:textColor="@color/colorAccent"
             android:text="@string/create_text"
             android:background="@android:color/transparent"
