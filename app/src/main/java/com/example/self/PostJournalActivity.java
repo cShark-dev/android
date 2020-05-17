@@ -65,6 +65,9 @@ public class PostJournalActivity extends AppCompatActivity implements View.OnCli
         addPhotoButton = findViewById(R.id.postCameraButton);
         addPhotoButton.setOnClickListener(this);
 
+        progressBar.setVisibility(View.INVISIBLE);   //we want this to happen right when we hit save
+
+
         if (JournalApi.getInstance() != null) {
             currentUserId = JournalApi.getInstance().getUserId();
             currentUserName = JournalApi.getInstance().getUsername();
