@@ -3,7 +3,10 @@ package com.example.self;
 import android.content.Intent;
 import android.media.Image;
 import android.net.Uri;
+import android.nfc.Tag;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,16 +18,27 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.util.Date;
+
+import io.grpc.Context;
+import model.Journal;
 import util.JournalApi;
 
 public class PostJournalActivity extends AppCompatActivity implements View.OnClickListener {
     private static final int GALLERY_CODE = 1;
+    private static final String TAG = "PostJournalActivity";
     private Button saveButton;
     private ProgressBar progressBar;
     private ImageView addPhotoButton;
@@ -44,6 +58,7 @@ public class PostJournalActivity extends AppCompatActivity implements View.OnCli
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private StorageReference storageReference;     //to store images
 
+
     private CollectionReference collectionReference = db.collection("Journal"); //Another reference, a COLLECTION reference, we are passing "Journal",
     private Uri imageUri;
 
@@ -53,6 +68,7 @@ public class PostJournalActivity extends AppCompatActivity implements View.OnCli
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_journal);
 
+        storageReference = FirebaseStorage.getInstance().getReference();
         firebaseAuth = FirebaseAuth.getInstance();
         progressBar = findViewById(R.id.post_progressBar);
         titleEditText = findViewById(R.id.post_title_et);
@@ -79,7 +95,7 @@ public class PostJournalActivity extends AppCompatActivity implements View.OnCli
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 user = firebaseAuth.getCurrentUser();
-                if (user !=null) {
+                if (user != null) {
 
                 } else {
 
@@ -94,7 +110,7 @@ public class PostJournalActivity extends AppCompatActivity implements View.OnCli
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.post_save_journal_button:
-                //saveJournal
+                saveJournal();
                 break;
             case R.id.postCameraButton:
                 //get image from gallery/phone
@@ -102,6 +118,86 @@ public class PostJournalActivity extends AppCompatActivity implements View.OnCli
                 galleryIntent.setType("image/*");                                  //we need to give it meta data to tell it what we want to get
                 startActivityForResult(galleryIntent, GALLERY_CODE);                               //we are asking to receive something from the operating system, pass in galleryIntent and gallerycode
                 break;
+        }
+
+    }
+
+    private void saveJournal() {        //When this method is called it makes sure all the text in our edit text fields are retrieved
+
+      final String title = titleEditText.getText().toString().trim();      //get the text view, we need to get the title
+        final String thoughts = thoughtsEditText.getText().toString().trim();
+
+        progressBar.setVisibility(View.VISIBLE);                //make our progress bar visible to let users know things are happening
+
+        if (!TextUtils.isEmpty(title) &&             //pass title
+                !TextUtils.isEmpty(thoughts)                //and textutils that is empty, pass thoughts
+                && imageUri != null) {                      //and make sure that the imageUri is not null, make sure they send an image as well,
+
+            final StorageReference filepath = storageReference                      //we need to create a filepath for our storage reference,
+                    .child("journal_images")                                        //we create a folder here called journal_images, we make then sure to append something to the name of the image below,
+                    .child("my_image_" + Timestamp.now().getSeconds());               // my_image_245r323432 every name needs a unique id as a timestamp, append timestamp
+
+            filepath.putFile(imageUri)                          //Then we put the file that we created into our storage reference, so we safe put file we pass the image URI and we have the onSuccess, we need to retrieve
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+
+                            filepath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {                        //The reason why we need to retrieve is that for our journal object its easier for us to access it when we are retrieving all of our journal
+
+                                    String imageUrl = uri.toString();
+                                    //Todo: create a Journal Object - model (class)
+                                    Journal journal = new Journal();
+                                    journal.setTitle(title);
+                                    journal.setThought(thoughts);
+                                    journal.setImageUrl(imageUrl);
+                                    journal.setTimeAdded(new Timestamp(new Date()));
+                                    journal.setUserName(currentUserName);
+                                    journal.setUserId(currentUserId);
+
+                                    //Todo: invoke our collectionReference
+
+
+                                    collectionReference.add(journal)
+                                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                                @Override
+                                                public void onSuccess(DocumentReference documentReference) {
+
+                                                    progressBar.setVisibility(View.INVISIBLE);
+                                                    startActivity(new Intent(PostJournalActivity.this,
+                                                            JournalListActivity.class));
+                                                    finish();
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    Log.d(TAG, "onFailure: " + e.getMessage());
+                                                }
+                                            });
+                                    //Todo: and save a Journal instance.
+
+                                }
+                            });
+
+
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            progressBar.setVisibility(View.INVISIBLE);
+
+                        }
+                    });
+
+        } else {
+
+            progressBar.setVisibility(View.INVISIBLE);
+
         }
 
     }
@@ -126,9 +222,9 @@ public class PostJournalActivity extends AppCompatActivity implements View.OnCli
 
     @Override
     protected void onStop() {
-            super.onStop();
-            if (firebaseAuth != null) {
-                firebaseAuth.removeAuthStateListener((authStateListener));
-            }
+        super.onStop();
+        if (firebaseAuth != null) {
+            firebaseAuth.removeAuthStateListener((authStateListener));
+        }
     }
 }

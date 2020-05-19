@@ -17,8 +17,6 @@ public class JournalApi extends Application {
 
     public JournalApi() {}      //Empty constructor
 
-
-
     public String getUsername() {
         return username;
     }
