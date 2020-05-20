@@ -5,19 +5,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/gradient_bg"
     tools:context=".PostJournalActivity">
 
     <EditText
         android:id="@+id/post_description_et"
-        android:layout_width="379dp"
-        android:layout_height="49dp"
+        android:layout_width="377dp"
+        android:layout_height="97dp"
         android:layout_marginTop="16dp"
+        android:background="@drawable/input_outline"
         android:ems="10"
         android:hint="@string/hint_thoughts"
-        android:inputType="textPersonName"
+        android:inputType="textMultiLine"
+        android:padding="15dp"
+        android:textSize="19sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/post_title_et" />
+        app:layout_constraintTop_toBottomOf="@+id/post_title_et"
+        tools:text="@string/posting2" />
 
     <ImageView
         android:id="@+id/post_imageView"
@@ -73,6 +78,7 @@
         android:layout_width="379dp"
         android:layout_height="49dp"
         android:layout_marginTop="16dp"
+        android:background="@drawable/input_outline"
         android:ems="10"
         android:hint="@string/title_hint"
         android:inputType="textPersonName"

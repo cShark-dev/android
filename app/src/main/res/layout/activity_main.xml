@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:gravity="center"
+    android:background="@drawable/gradient_bg"
     android:orientation="vertical"
     android:padding="18dp"
     tools:context=".MainActivity">
@@ -14,14 +15,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/roboto_slab_bold"
-        android:text="@string/title"
-        android:textSize="30sp" />
+        android:text="@string/title2"
+        android:textSize="30sp"
+        />
 
     <RelativeLayout
         android:id="@+id/relativelayout"
         android:gravity="center_horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        >
+
 
         <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -30,13 +34,14 @@
         app:cardCornerRadius="8dp"
         app:cardUseCompatPadding="true">
 
-          <TextView
+            <TextView
                 android:id="@+id/gratefulText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="@string/grateful_text"
-                android:textSize="19sp" />
+                android:text="@string/learned_text"
+                android:textSize="19sp"
+                />
 
         </androidx.cardview.widget.CardView>
 

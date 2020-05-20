@@ -17,4 +17,9 @@
     <string name="menu_title">Add Thoughts...</string>
     <string name="signout">Signout</string>
     <string name="no_thoughts_hint">Write a Journal Entry by clicking the \"+\" icon above</string>
+    <string name="title2">What have you learned today?</string>
+    <string name="learned_text">Keep track of your learning!</string>
+    <string name="post">What have you coded?</string>
+    <string name="posting">Your code</string>
+    <string name="posting2">Your Notes</string>
 </resources>
