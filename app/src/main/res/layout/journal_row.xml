@@ -1,10 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_margin="5dp"
     app:cardCornerRadius="8dp">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:elevation="10dp"
+        android:alpha="0.8"
+        android:gravity="end"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/journal_row_username"
+            android:text="Frankie"
+            android:padding="3dp"
+            android:textSize="17dp"
+            android:layout_weight="1"
+            android:textColor="#F00"
+            android:gravity="start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        
+        <ImageButton
+            android:id="@+id/journal_row_share_button"
+            android:src="@android:drawable/ic_menu_share"
+            android:background="@color/cardview_shadow_start_color"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+
+    </LinearLayout>
 
     <LinearLayout
         android:orientation="vertical"
@@ -37,7 +67,7 @@
             android:paddingTop="15dp"
             android:paddingEnd="15dp"
             android:paddingStart="10dp"
-            android:textStyle="bold"
+            android:textStyle="normal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
