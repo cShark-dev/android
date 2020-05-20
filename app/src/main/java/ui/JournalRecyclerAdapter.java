@@ -1,6 +1,7 @@
 package ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -85,24 +86,32 @@ public class JournalRecyclerAdapter extends RecyclerView.Adapter<JournalRecycler
         String username;
 
 
-        public ViewHolder (@NonNull View itemView, Context ctx) {                           //The context ctx makes it clickable so we can go to the next view or next activity
+        public ViewHolder(@NonNull View itemView, Context ctx) {                            //Context makes it clickable so we can go to next view or next activity
             super(itemView);
             context = ctx;
+
             title = itemView.findViewById(R.id.journal_title_list);
             thoughts = itemView.findViewById(R.id.journal_thought_list);
             dateAdded = itemView.findViewById(R.id.journal_timestamp_list);
             image = itemView.findViewById(R.id.journal_image_list);
-        //    name = itemView.findViewById(R.id.username_account);
             name = itemView.findViewById(R.id.journal_row_username);
+
             shareButton = itemView.findViewById(R.id.journal_row_share_button);
             shareButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                    sharingIntent.setType("text/plain");
+                    String shareBody = "Here is the share content body";
+                    sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Subject Here");
+                    sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
 
-                    //context.startActivity();
+                    context.startActivity(sharingIntent);
                 }
             });
 
         }
+
+
     }
 }

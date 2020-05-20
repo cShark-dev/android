@@ -42,24 +42,20 @@ public class JournalListActivity extends AppCompatActivity {
     private List<Journal> journalList;
     private RecyclerView recyclerView;
     private JournalRecyclerAdapter journalRecyclerAdapter;
-
     private CollectionReference collectionReference = db.collection("Journal");
     private TextView noJournalEntry;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_journal_list);
-
         Objects.requireNonNull(getSupportActionBar()).setElevation(0);
         firebaseAuth = FirebaseAuth.getInstance();
         user = firebaseAuth.getCurrentUser();
-
         noJournalEntry = findViewById(R.id.list_no_thoughts);
-
         journalList = new ArrayList<>();
-
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -134,4 +130,5 @@ public class JournalListActivity extends AppCompatActivity {
             }
         });
     }
+
 }
